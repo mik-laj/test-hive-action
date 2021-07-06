@@ -13,8 +13,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        repository: apache/hive
-        ref: 26395083bfd3516678719eeea25ba82647d71e01
+        with:
+          repository: apache/hive
+          ref: 26395083bfd3516678719eeea25ba82647d71e01
       - run: |
           docker run \
           -i \
@@ -35,8 +36,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-        repository: apache/hive
-        ref: 26395083bfd3516678719eeea25ba82647d71e01
+        with:
+          repository: apache/hive
+          ref: 26395083bfd3516678719eeea25ba82647d71e01
       - uses: actions/setup-java@v2
         with:
           java-version: '8'
