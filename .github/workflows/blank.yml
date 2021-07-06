@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        repository: apache/hive
+        ref: 26395083bfd3516678719eeea25ba82647d71e01
+      - run: |
+          docker run \
+          -i \
+          --rm \
+          -v "$HOME/.m2":/root/.m2 \
+          -v "$PWD:$PWD" \
+          -w "$PWD" \
+          maven:3-adoptopenjdk-8 \
+            mvn clean package  \
+              -Pdist \
+              -DskipTests  \
+              -Dmaven.javadoc.skip=true  \
+              --no-transfer-progress  \
+              -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN
+
+  build-native:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        repository: apache/hive
+        ref: 26395083bfd3516678719eeea25ba82647d71e01
+      - uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - run: |
+          mvn clean package  \
+            -Pdist \
+            -DskipTests  \
+            -Dmaven.javadoc.skip=true  \
+            --no-transfer-progress  \
+            -Dorg.slf4j.simpleLogger.defaultLogLevel=WARN
